@@ -2,6 +2,12 @@ const express = requires('express');
 const mysql2 = requires('mysql2');
 const fs = requires('fs');
 
+// create the connection to database
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'employees-management'
+  });
 
 // landing page with list of choices to work with departments, employees and roles.
 
