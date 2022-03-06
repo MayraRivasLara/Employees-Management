@@ -46,12 +46,13 @@ async function getDepartments(id) {
 
     }
 
-// for the future implementation 
-//function updateDepartments(id, salary){
+// for future implementations
+async function updateDepartments(){
+    const department = connection.query
 
-// };
+};
 
-async function deleteAllDepts() {
+async function deleteAllDepartments() {
     const dataBase= await connectDatabase();
     await dataBase.query("SET FOREIGN_KEY_CHECKS=0");
     const results = await dataBase.execute("TRUNCATE `departments`");
@@ -62,5 +63,6 @@ async function deleteAllDepts() {
 module.exports= {
     createDepartment,
     getDepartments,
-    deleteAllDepts,
+    updateDepartments,
+    deleteAllDepartments,
 }

@@ -25,5 +25,5 @@ function getRoles(){
 
 module.exports= {
     createRole,
-    getRoles,
-}
+    getRoles
+};

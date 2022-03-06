@@ -1,22 +1,23 @@
 const inquirer = require('inquirer');
-const express = require('express');
-const mysql2 = require('mysql2');
-const fs = require('fs');
-const { createDepartment } = require('./src/departments');
+// const express = require('express');
+// const mysql2 = require('mysql2');
+// const fs = require('fs');
+const { getDepartments, createDepartment, deleteAllDepartments} = require('./src/departments');
+const { createRole, getRoles } = require('./src/roles');
+const { createEmployee, getEmployees, updateEmployeeRole, deleteEmployee,} = require('./src/employees');
 
-function ask() {
+function askUser() {
   return inquirer.prompt([{
     message: 'What would you like to do?',
     type: 'list',
     choices: [
-      'Add Employee',
-      'Update Employee Role',
-      'View all Roles',
-      'Add Role',
-      'View All Departments',
-      'Add Department',
-      'View All Employees',
-      'Add Employee',
+      'View all departments', 
+      'View all roles', 
+      'View all employees', 
+      'Add department', 
+      'Add role',
+      'Add employee', 
+      'Update employee role',
       'Exit',
 
     ],
@@ -36,15 +37,43 @@ function ask() {
       await askDepartment();
      
       createDepartment(userInput);
-  };
+    };
 
+    askUser()
+
+    if (answers.option === 'View all roles') {
+        const result = getRoles();
+        console.table(result);
+    };    
+    
+    if (answers.option === 'Add role')
+      await askRoles();
+   
+    createRole(userInput);
+  
     askUser();
+    
+    if (answers.option === 'View all employees') {
+      const result = getEmployees();
+      console.table(result);
+  };    
+    
+    if (answers.option === 'Add employee') {
+      await askEmployee();
+      
+      createEmployee(userInput);
+    };
+    
+    if (answers.option === 'Update employee role') {
+      
+    }
+    askUser()
+       
+  }
+  )}
 
-  })
-}
 
-// landing page with list of choices to work with departments, employees and roles.
-
+askUser()
 // choices 
 // view all departments,
 // should show all the departments in a table in the console

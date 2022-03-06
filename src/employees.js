@@ -26,3 +26,18 @@ function getEmployees(){
 function updateEmployeeRole(employeeId, newRoleId){
 
 };
+
+async function deleteEmployee() {
+    const dataBase= await connectDatabase();
+    await dataBase.query("SET FOREIGN_KEY_CHECKS=0");
+    const results = await dataBase.execute("TRUNCATE `employees`");
+    await dataBase.execute("SET_FOREIGN_KEY_CHECKS=1");
+    return results;
+}
+
+module.exports= {
+    createEmployee,
+    getEmployees,
+    updateEmployeeRole,
+    deleteEmployee,
+};
