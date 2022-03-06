@@ -1,13 +1,47 @@
-const express = requires('express');
-const mysql2 = requires('mysql2');
-const fs = requires('fs');
+const inquirer = require('inquirer');
+const express = require('express');
+const mysql2 = require('mysql2');
+const fs = require('fs');
+const { createDepartment } = require('./src/departments');
 
-// create the connection to database
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'employees-management'
-  });
+function ask() {
+  return inquirer.prompt([{
+    message: 'What would you like to do?',
+    type: 'list',
+    choices: [
+      'Add Employee',
+      'Update Employee Role',
+      'View all Roles',
+      'Add Role',
+      'View All Departments',
+      'Add Department',
+      'View All Employees',
+      'Add Employee',
+      'Exit',
+
+    ],
+    name: 'options'
+  }]).then((answers) => {
+    
+    if (answers.option === 'Exit') {
+      process.exit(0);
+    };
+
+    if (answers.option === 'View All Departments') {
+        const result = getDepartments();
+        console.table(result);
+    };
+
+    if (answers.option === 'Add Department') {
+      await askDepartment();
+     
+      createDepartment(userInput);
+  };
+
+    askUser();
+
+  })
+}
 
 // landing page with list of choices to work with departments, employees and roles.
 
@@ -37,3 +71,13 @@ const connection = mysql.createConnection({
 // employees role 
 // name of the managers employee's responds to (foreign key)
 // add to the data base 
+
+
+
+
+// // create the connection to database
+// const connection = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     database: 'employees-management'
+//   });

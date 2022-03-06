@@ -22,5 +22,7 @@
     "inquirer": "^8.2.0",
     "mysql2": "^2.3.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.7"
+  }
 }
