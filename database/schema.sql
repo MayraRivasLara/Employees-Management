@@ -1,6 +1,8 @@
 DROP DATABASE IF EXISTS `employees_management_db`;
 CREATE SCHEMA `employees_management_db`;
 
+USE `employees_management_db`;
+
 -- Create table departments
 CREATE TABLE `employees_management_db`.`departments` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -38,7 +40,8 @@ CREATE TABLE `employees_management_db`.`employees` (
     ON DELETE CASCADE
     ON UPDATE NO ACTION);
 
--- add manager id fk constraint
+
+-- add manager id to grab fk constraint
 ALTER TABLE `employees_management_db`.`employees` 
 ADD INDEX `fk_employee_manager_idx` (`manager_id` ASC) VISIBLE;
 ;

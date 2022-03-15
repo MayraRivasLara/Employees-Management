@@ -1,6 +1,4 @@
 require('dotenv').config();
-
-// import mysql2
 const mysql= require('mysql2/promise');
 
 // create a helper function to connect to database
@@ -15,4 +13,4 @@ function connectDatabase(){
     });
 }
 
-module.exports= {connectDatabase};
+module.exports= connectDatabase;
