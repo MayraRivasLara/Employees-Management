@@ -1,10 +1,7 @@
 // CRUD 
+const inquirer = require('inquirer');
 
 const connectDatabase = require("../../database/connect");
-
-
-
-
 
 async function createRole(roleName, roleSalary, departmentId) {
 
@@ -12,6 +9,7 @@ async function createRole(roleName, roleSalary, departmentId) {
 
 
     const [result] = await connection.query(
+        
         "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)",
         [
             roleName,
@@ -26,7 +24,7 @@ async function createRole(roleName, roleSalary, departmentId) {
 
 async function getRoles() {
     const connection = await connectDatabase();
-    const roles = await connection.execute("SELECT * FROM role;");
+    const roles = await connection.execute("SELECT * FROM roles;");
 
     return roles[0];
 

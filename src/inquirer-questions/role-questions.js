@@ -3,12 +3,12 @@ async function askToCreateRole() {
 
     return inquirer.prompt([
         {
-            message: "What is the new role title?",
+            message: "Please provide the new role:",
             name: "newRoleTitle",
             type: "input",
         },
         {
-            message: "What is the salary?",
+            message: "What is the salary assigned to this role?",
             name: "newRoleSalary",
             type: "input",
         },

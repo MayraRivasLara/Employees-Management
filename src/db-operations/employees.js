@@ -1,65 +1,58 @@
 const inquirer = require('inquirer');
-const connectDatabase = require("../database/connect");
-require('console.table');
 
-const { getRoles } = require("./roles");
+const connectDatabase = require("../../database/connect");
 
+async function createEmployee(firstName, lastName, roleId, managerId) {
 
-async function createEmployee() {
-    // connect to db
     const connection = await connectDatabase();
-    return inquirer.prompt([
-        {
-          message: "Enter employee's first name?",
-          name: "newFirstName",
-          type: "input",
-        },
-        {
-            message: "Enter employee's last name?",
-            name: "newLastName",
-            type: "input",
-        },
-        {
-            message: "Enter a new role ID?",
-            name: "newRoleId",
-            type: "input",
-        },
-        {
-            message: "Enter employee's Manager ID?",
-            name: "ManagerId",
-            type: "input",
-        },
-    
-    ]).then((answer) => {
-        console.log(answer);
-        connection.query(
-            "INSERT INTO `employees` (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)"
-            [
-               answer.newFirstName,
-               answer.newLastName,
-               // using ParseInt() function to return an Integer
-               parseInt(answer.newRoleId),
-               parseInt(answer.ManagerId)
-            ],
-            (req, res) => { 
-                console.log("Id"+ answer.newFirstName + "added");
-                connection.end() // end() method to ensure that all remaining queries are executed before the database connection closed.
-                return res;
-            }
+
+    const [result] = await connection.query(
+
+        "INSERT INTO `employees` (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)"
+
+        [
+            firstName,
+            lastName,
+            roleId,
+            managerId
+        ],
+        
         )
-    })
-}
-
-async function getEmployees() {
-    const connection = await connectDatabase();
-
-    const employees = await connection.execute(
-        "SELECT * FROM employee JOIN role ON employee.role_id role,id;"
-    );
-
-    return employees[0];
+        
+        return result;
 
 }
+
+    // display employees table
+    async function getEmployees() {
+        
+        const connection = await connectDatabase();
+
+        // Once connected to database, select all columns from table employees
+        const employees = await connection.execute(
+            'SELECT * FROM `employees`;') 
+
+            // display data in the console
+            return employees[0];
+    }
+    
+    // (req, res) => { 
+    //     console.log("Id"+ answer.newFirstName + "added");
+    //     connection.end() // end() method to ensure that all remaining queries are executed before the database connection closed.
+    //     return res;
+    //         }
+          
+
+// async function getEmployees() {
+//     const connection = await connectDatabase();
+
+//     const employees = await connection.execute(
+//         "SELECT * FROM employee JOIN role ON employee.role_id role,id;"
+//     );
+
+//     return employees[0];
+
+// }
 
 
 async function updateEmployeeRole() {

@@ -1,8 +1,8 @@
 // CRUD - Create Read Update and Delete
 
 const inquirer = require('inquirer');
+
 const connectDatabase = require("../../database/connect");
-require('console.table');
 
 // call function to create department
 async function createDepartment(departmentName){
@@ -15,10 +15,6 @@ async function createDepartment(departmentName){
         [departmentName]
     )
     return result;
-
-
-    
-    
 
 }
 
