@@ -74,7 +74,7 @@ questions();
 
 // show table functions based on user selection
 function showDepartments() {
-  console.log("These are all the departments:\n");
+  console.log("Departments:\n");
   db.query(
     "SELECT * FROM employees_management_db.departments;",
     function (err, results) {
@@ -88,7 +88,7 @@ function showDepartments() {
 }
 
 function showRoles() {
-  console.log("These are all roles:\n");
+  console.log("Roles:\n");
   db.query(
     "SELECT * FROM employees_management_db.roles;",
     function (err, results) {
@@ -102,7 +102,7 @@ function showRoles() {
 }
 
 function showEmployees() {
-  console.log("These are current employees:\n");
+  console.log("Current Employees:\n");
   db.query(
     "SELECT * FROM employees JOIN roles ON employees.role_id = roles.id;",
     function (err, results) {
@@ -121,7 +121,7 @@ function addDepartment() {
       {
         type: "input",
         name: "newdepartment",
-        message: "What is the name of the new department?",
+        message: "Please type the name of the new department",
       },
     ])
     .then((answers) => {
@@ -149,17 +149,17 @@ function addRole() {
         {
           type: "input",
           name: "rolename",
-          message: "What is the name of the new role?",
+          message: "Please type the name of the new role?",
         },
         {
           type: "input",
           name: "rolesalary",
-          message: "What is the salary of the new role?",
+          message: "What is the salary assigned to the new role?",
         },
         {
           type: "list",
           name: "roledepartment",
-          message: "What department is the new role in?",
+          message: "What department does the new belong to?",
           choices: departmentList,
         },
       ])
@@ -188,17 +188,17 @@ function addEmployee() {
         {
           type: "input",
           name: "employeeFirstname",
-          message: "What is the employee's first name?",
+          message: "Please type employee's first name?",
         },
         {
           type: "input",
           name: "employeeLastname",
-          message: "What is the employee's last name?",
+          message: "Please type employee's last name?",
         },
         {
           type: "list",
           name: "employeeRole",
-          message: "What is the employee's role?",
+          message: "Please type employee's role?",
           choices: roleList,
         },
       ])
@@ -227,10 +227,10 @@ function addEmployee() {
                 },
               ])
               .then((answers) => {
-                let managerOptions = answers.employeemanager;
+                let selectManager = answers.employeemanager;
                 db.query(
                   "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
-                  [newFirstName, newLastName, newEmployeeRole, managerOptions],
+                  [newFirstName, newLastName, newEmployeeRole, selectManager],
                   function (err, results) {
                     console.log(err);
                   }
@@ -246,9 +246,9 @@ function addEmployee() {
 
 function updateEmployee() {
   db.query("SELECT * FROM employees_management_db.employees;", function (err, results) {
-    let employeeList = [];
+    let employeesList = [];
     results.forEach((result) =>
-      employeeList.push({
+      employeesList.push({
         name: result.first_name + " " + result.last_name,
         value: result.id,
       })
@@ -258,8 +258,8 @@ function updateEmployee() {
         {
           type: "list",
           name: "employeeUpdate",
-          message: "Which employee would you like to update?",
-          choices: employeeList,
+          message: "Select the employee you would like to update?",
+          choices: employeesList,
         },
       ])
       .then((answers) => {
@@ -275,7 +275,7 @@ function updateEmployee() {
               {
                 type: "list",
                 name: "roleUpdate",
-                message: "What is the employee's new role?",
+                message: "What is the new role?",
                 choices: roles,
               },
             ])
@@ -296,6 +296,6 @@ function updateEmployee() {
 }
 // exit function
 function exit() {
-  console.log("Employee Tracker completed!");
-  // db.end();
+  console.log("Great work!");
+  
 }
