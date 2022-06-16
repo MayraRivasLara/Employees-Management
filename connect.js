@@ -9,8 +9,10 @@ function connectDatabase(){
        user: process.env.DB_USER, 
        port: process.env.DB_PORT,
        password: process.env.DB_PASSWORD,
-       database: "employees_management_db"
-    });
+       database: "employees_management_db",
+    }, 
+    console.log(`Connected to Employees Management database`)
+    );
 }
 
 module.exports= connectDatabase;
