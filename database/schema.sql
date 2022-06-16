@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS employees_management_db;
-CREATE DATABASE employees_management_db;
+CREATE SCHEMA employees_management_db;
 
 USE employees_management_db;
 
@@ -9,8 +9,7 @@ CREATE TABLE departments (
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id));
 
-
--- Create table roles 
+-- Create table roles
 CREATE TABLE roles (
   id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR(255),
@@ -30,7 +29,7 @@ CREATE TABLE employees (
   manager_id INT,
   PRIMARY KEY (id),
   FOREIGN KEY (role_id)
-    REFERENCES roles (id)
-    FOREIGN KEY (manager_id) REFERENCES employees(id)
-    ON DELETE SET NULL
+  REFERENCES roles (id),
+  FOREIGN KEY (manager_id) REFERENCES employees(id)
+  ON DELETE SET NULL
   );

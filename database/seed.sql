@@ -11,7 +11,7 @@ VALUES (001, "Manager", 001, 75500),
        (003, "Floor-staff", 002, 60000),
        (004, "Stock-staff", 003, 85000),
        (005, "Delivery", 002, 55000),
-       (007, "Cleaning-staff", 003, 30000);
+       (006, "Cleaning-staff", 003, 30000);
        
 INSERT INTO employees (id, first_name, last_name, role_id, manager_id)
 VALUES (001, "Monique", "Kelly", 001, NULL), 
