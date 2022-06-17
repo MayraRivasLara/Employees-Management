@@ -1,7 +1,9 @@
 // importing inquirer
 const inquirer = require("inquirer");
-// import mysql12
+// importing mysql12
 const mysql = require("mysql2");
+// importing console.table
+const consoleTable = require("console.table");
 
 // connecting to database
 require("dotenv").config();
@@ -15,7 +17,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the Employee database.`)
 );
 
-// when node server.js is run in the terminal - Inquirer Prompts to update, view and add (employees, roles + departments)
+// Initiate questions through Inquirer
 function questions() {
   return inquirer
     .prompt([
