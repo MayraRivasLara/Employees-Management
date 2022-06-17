@@ -1,9 +1,9 @@
-// import inquirer
+// importing inquirer
 const inquirer = require("inquirer");
 // import mysql12
 const mysql = require("mysql2");
 // import console.table
-// const consoleTable = require("console.table");
+const consoleTable = require("console.table");
 
 // connecting to database
 require('dotenv').config()
@@ -142,36 +142,40 @@ function addDepartment() {
 function addRole() {
   db.query("SELECT * FROM employee_db.departments;", function (err, results) {
     let departmentList = [];
-    results.forEach((result) => departmentList.push({ name: result.name, value: result.id })
+    results.forEach((result) => 
+    departmentList.push({ name: result.name, value: result.id })
     );
     return inquirer
       .prompt([
         {
           type: "input",
-          name: "rolename",
+          name: "newrolename",
           message: "Please type the name of the new role?",
         },
         {
           type: "input",
-          name: "rolesalary",
+          name: "newrolesalary",
           message: "What is the salary assigned to the new role?",
         },
         {
           type: "list",
-          name: "roledepartment",
+          name: "newroledepartment",
           message: "What department does the new belong to?",
           choices: departmentList,
         },
       ])
       .then((answers) => {
         db.query(
-          "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)",
-          [answers.rolename, answers.rolesalary, answers.roledepartment],
+          "INSERT INTO roles (title, department_id, salary) VALUES (?, ?, ?)",
+          [answers.newrolename, answers.newroledepartment, answers.newrolesalary],
           function (err, results) {
-            console.log(err);
-          }
+            if (err) {
+                console.log(err);
+            }
+        }
         );
-        console.log("Added" + answers.rolename + " to roles!");
+
+        console.log("Added" + answers.newrolename + " to roles!");
         questions();
       });
   });
