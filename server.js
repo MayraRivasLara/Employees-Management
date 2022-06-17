@@ -2,20 +2,18 @@
 const inquirer = require("inquirer");
 // import mysql12
 const mysql = require("mysql2");
-// import console.table
-const consoleTable = require("console.table");
 
 // connecting to database
-require('dotenv').config()
+require("dotenv").config();
 const db = mysql.createConnection(
-        {
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: 'employees_management_db',
-        },
-        console.log(`Connected to the Employee database.`)
-    );
+  {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: "employees_management_db",
+  },
+  console.log(`Connected to the Employee database.`)
+);
 
 // when node server.js is run in the terminal - Inquirer Prompts to update, view and add (employees, roles + departments)
 function questions() {
@@ -142,8 +140,8 @@ function addDepartment() {
 function addRole() {
   db.query("SELECT * FROM employee_db.departments;", function (err, results) {
     let departmentList = [];
-    results.forEach((result) => 
-    departmentList.push({ name: result.name, value: result.id })
+    results.forEach((result) =>
+      departmentList.push({ name: result.name, value: result.id })
     );
     return inquirer
       .prompt([
@@ -167,139 +165,151 @@ function addRole() {
       .then((answers) => {
         db.query(
           "INSERT INTO roles (title, department_id, salary) VALUES (?, ?, ?)",
-          [answers.newrolename, answers.newroledepartment, answers.newrolesalary],
+          [
+            answers.newrolename,
+            answers.newroledepartment,
+            answers.newrolesalary,
+          ],
           function (err, results) {
             if (err) {
-                console.log(err);
+              console.log(err);
             }
-        }
+          }
         );
 
-        console.log("Added" + answers.newrolename + " to roles!");
+        console.log(answers.newrolename + " Added to roles!");
         questions();
       });
   });
 }
 
 function addEmployee() {
-  db.query("SELECT * FROM employees_management_db.roles;", function (err, results) {
-    let roleList = [];
-    results.forEach((result) =>
-      roleList.push({ name: result.title, value: result.id })
-    );
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "employeeFirstname",
-          message: "Please type employee's first name?",
-        },
-        {
-          type: "input",
-          name: "employeeLastname",
-          message: "Please type employee's last name?",
-        },
-        {
-          type: "list",
-          name: "employeeRole",
-          message: "Please type employee's role?",
-          choices: roleList,
-        },
-      ])
-      .then((answers) => {
-        let newFirstName = answers.employeeFirstname;
-        let newLastName = answers.employeeLastname;
-        let newEmployeeRole = answers.employeeRole;
-        db.query(
-          "SELECT * FROM employees_management_db.employees;",
-          function (err, results) {
-            let employeeNames = [];
-            results.forEach((result) =>
-              employeeNames.push({
-                name: result.first_name + " " + result.last_name,
-                value: result.id,
-              })
-            );
+  db.query(
+    "SELECT * FROM employees_management_db.roles;",
+    function (err, results) {
+      let roleList = [];
+      results.forEach((result) =>
+        roleList.push({ name: result.title, value: result.id })
+      );
+      return inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "employeeFirstname",
+            message: "Please type employee's first name?",
+          },
+          {
+            type: "input",
+            name: "employeeLastname",
+            message: "Please type employee's last name?",
+          },
+          {
+            type: "list",
+            name: "employeeRole",
+            message: "Please type employee's role?",
+            choices: roleList,
+          },
+        ])
+        .then((answers) => {
+          let newFirstName = answers.employeeFirstname;
+          let newLastName = answers.employeeLastname;
+          let newEmployeeRole = answers.employeeRole;
+          db.query(
+            "SELECT * FROM employees_management_db.employees;",
+            function (err, results) {
+              let employeeNames = [];
+              results.forEach((result) =>
+                employeeNames.push({
+                  name: result.first_name + " " + result.last_name,
+                  value: result.id,
+                })
+              );
 
-            return inquirer
-              .prompt([
-                {
-                  type: "list",
-                  name: "employeemanager",
-                  message: "Who is the employee's manager?",
-                  choices: employeeNames,
-                },
-              ])
-              .then((answers) => {
-                let selectManager = answers.employeemanager;
-                db.query(
-                  "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
-                  [newFirstName, newLastName, newEmployeeRole, selectManager],
-                  function (err, results) {
-                    console.log(err);
-                  }
-                );
-                console.log("Employee has been added!");
-                questions();
-              });
-          }
-        );
-      });
-  });
+              return inquirer
+                .prompt([
+                  {
+                    type: "list",
+                    name: "employeemanager",
+                    message: "Who is the employee's manager?",
+                    choices: employeeNames,
+                  },
+                ])
+                .then((answers) => {
+                  let selectManager = answers.employeemanager;
+                  db.query(
+                    "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+                    [newFirstName, newLastName, newEmployeeRole, selectManager],
+                    function (err, results) {
+                      console.log(err);
+                    }
+                  );
+                  console.log("Employee has been added!");
+                  questions();
+                });
+            }
+          );
+        });
+    }
+  );
 }
 
 function updateEmployee() {
-  db.query("SELECT * FROM employees_management_db.employees;", function (err, results) {
-    let employeesList = [];
-    results.forEach((result) =>
-      employeesList.push({
-        name: result.first_name + " " + result.last_name,
-        value: result.id,
-      })
-    );
-    return inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "employeeUpdate",
-          message: "Select the employee you would like to update?",
-          choices: employeesList,
-        },
-      ])
-      .then((answers) => {
-        let employee = answers.employeeUpdate;
-        db.query("SELECT * FROM employees_management_db.roles;", function (err, results) {
-          let roles = [];
-          results.forEach((result) =>
-            roles.push({ name: result.title, value: result.id })
-          );
-
-          return inquirer
-            .prompt([
-              {
-                type: "list",
-                name: "roleUpdate",
-                message: "What is the new role?",
-                choices: roles,
-              },
-            ])
-            .then((answers) => {
-              let newrole = answers.roleUpdate;
-              db.query(
-                "UPDATE employees_management_db.employees SET role_id = ? WHERE id = ?",
-                [newrole, employee],
-                function (err, results) {
-                  console.log("Employee has been updated!");
-                  questions();
-                }
+  db.query(
+    "SELECT * FROM employees_management_db.employees;",
+    function (err, results) {
+      let employeesList = [];
+      results.forEach((result) =>
+        employeesList.push({
+          name: result.first_name + " " + result.last_name,
+          value: result.id,
+        })
+      );
+      return inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "employeeUpdate",
+            message: "Select the employee you would like to update?",
+            choices: employeesList,
+          },
+        ])
+        .then((answers) => {
+          let employee = answers.employeeUpdate;
+          db.query(
+            "SELECT * FROM employees_management_db.roles;",
+            function (err, results) {
+              let roles = [];
+              results.forEach((result) =>
+                roles.push({ name: result.title, value: result.id })
               );
-            });
+
+              return inquirer
+                .prompt([
+                  {
+                    type: "list",
+                    name: "roleUpdate",
+                    message: "What is the new role?",
+                    choices: roles,
+                  },
+                ])
+                .then((answers) => {
+                  let newrole = answers.roleUpdate;
+                  db.query(
+                    "UPDATE employees_management_db.employees SET role_id = ? WHERE id = ?",
+                    [newrole, employee],
+                    function (err, results) {
+                      console.log("Employee has been updated!");
+                      questions();
+                    }
+                  );
+                });
+            }
+          );
         });
-      });
-  });
+    }
+  );
 }
 // exit function
 function exit() {
-  console.log("Great work!");
-  
+  console.log("Good work, see you soon!");
 }
